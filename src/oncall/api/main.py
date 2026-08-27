@@ -15,7 +15,7 @@ from slowapi.errors import RateLimitExceeded
 
 from oncall.api.middleware import MaxBodySizeMiddleware
 from oncall.api.rate_limit import limiter
-from oncall.api.routes import health
+from oncall.api.routes import health, investigations
 from oncall.observability import configure_logging
 from oncall.settings import get_settings
 
@@ -64,3 +64,4 @@ async def bind_correlation_id(
 
 
 app.include_router(health.router)
+app.include_router(investigations.router)
