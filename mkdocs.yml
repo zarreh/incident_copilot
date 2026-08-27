@@ -1,0 +1,66 @@
+site_name: Incident Investigation Copilot
+site_description: An on-call assistant that retrieves logs, runs sandboxed diagnostics, and drafts incident reports.
+repo_url: https://github.com/zarreh/incident_copilot
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - toc:
+      permalink: true
+      toc_depth: 3
+
+nav:
+  - Home: index.md
+  - How it works:
+      - In plain language: how-it-works/in-plain-language.md
+      - A real incident: how-it-works/a-real-incident.md
+  - Architecture:
+      - Overview: architecture/overview.md
+      - State and flow: architecture/state-and-flow.md
+  - ADRs:
+      - D-A5-1 Domain and repo: adr/d-a5-1-domain-and-repo.md
+      - D-A5-2 Web search default: adr/d-a5-2-web-search-default.md
+      - D-A5-3 Sandboxing: adr/d-a5-3-sandboxing.md
