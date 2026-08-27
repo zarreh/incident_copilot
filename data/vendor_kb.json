@@ -1,5 +1,66 @@
 {
   "version": "0.1.0",
-  "vendors": {},
-  "known_issues": []
+  "known_issues": [
+    {
+      "id": "KB-PG-001",
+      "vendor": "postgresql",
+      "symptoms": [
+        "FATAL: sorry, too many clients already",
+        "connection pool exhausted"
+      ],
+      "cause": "Max connections reached; often caused by long-running queries or connection leaks.",
+      "mitigation": "Check pg_stat_activity for long queries; raise max_connections or use pgbouncer."
+    },
+    {
+      "id": "KB-REDIS-001",
+      "vendor": "redis",
+      "symptoms": [
+        "cache miss ratio spike",
+        "database load surge"
+      ],
+      "cause": "Cache stampede after a cold start or invalidation of hot keys.",
+      "mitigation": "Use cache-aside with probabilistic early expiration or external warm-up job."
+    },
+    {
+      "id": "KB-RABBIT-001",
+      "vendor": "rabbitmq",
+      "symptoms": [
+        "queue depth growing",
+        "consumer process exited"
+      ],
+      "cause": "Consumer crash or stall; messages accumulate because no acks are processed.",
+      "mitigation": "Inspect consumer logs, set prefetch count, and add dead-letter queue."
+    },
+    {
+      "id": "KB-KAFKA-001",
+      "vendor": "kafka",
+      "symptoms": [
+        "consumer lag increasing",
+        "rebalance storm"
+      ],
+      "cause": "Slow consumers or frequent group rebalances.",
+      "mitigation": "Scale consumers, tune session.timeout.ms, and reduce poll batch size."
+    },
+    {
+      "id": "KB-JWT-001",
+      "vendor": "auth-service",
+      "symptoms": [
+        "JWT signature validation failed",
+        "HTTP 401 spike"
+      ],
+      "cause": "Deployment rotated signing keys without updating the key-id (kid) resolver.",
+      "mitigation": "Roll back deployment or refresh JWKS endpoint; validate kid before deploy."
+    },
+    {
+      "id": "KB-PAYMENT-001",
+      "vendor": "payment-service",
+      "symptoms": [
+        "payment request timed out",
+        "HTTP 504",
+        "retry queue depth growing"
+      ],
+      "cause": "Upstream processor latency or outage; retries amplify downstream load.",
+      "mitigation": "Add circuit breaker, reduce retry count, and fail fast with user messaging."
+    }
+  ]
 }
