@@ -31,6 +31,9 @@ class Settings(AgentSettings):
     max_tool_calls: int = 15
     max_run_seconds: float = 120.0
 
+    # Guardrails
+    citation_coverage_floor: float = 1.0
+
     # Sandbox
     sandbox_timeout_seconds: float = 30.0
     sandbox_memory_limit_mb: int = 256

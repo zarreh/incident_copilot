@@ -9,7 +9,12 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.prebuilt import ToolNode
 from zarreh_agentkit.guardrails.budget import Budget
 
-from oncall.graph.nodes import build_agent_node, build_route_after_agent, build_summarize_node
+from oncall.graph.nodes import (
+    build_agent_node,
+    build_route_after_agent,
+    build_summarize_node,
+    build_verify_node,
+)
 from oncall.graph.state import InvestigationState
 from oncall.retrieval.log_store import LogStore
 from oncall.retrieval.vendor_kb import VendorKB
@@ -52,6 +57,7 @@ def build_investigation_graph(
     builder.add_node("agent", build_agent_node(llm_with_tools))
     builder.add_node("tools", ToolNode(tools))
     builder.add_node("summarize", build_summarize_node(structured_llm))
+    builder.add_node("verify", build_verify_node(cfg.citation_coverage_floor))
 
     builder.add_edge(START, "agent")
     builder.add_conditional_edges(
@@ -60,6 +66,7 @@ def build_investigation_graph(
         {"tools": "tools", "summarize": "summarize"},
     )
     builder.add_edge("tools", "agent")
-    builder.add_edge("summarize", END)
+    builder.add_edge("summarize", "verify")
+    builder.add_edge("verify", END)
 
     return builder.compile(checkpointer=checkpointer)

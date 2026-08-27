@@ -9,6 +9,7 @@ from langchain_core.messages import AIMessage, SystemMessage
 from zarreh_agentkit.guardrails.budget import Budget, budget_breach_reason, count_tool_calls
 
 from oncall.graph.state import InvestigationState
+from oncall.guardrails.evidence_check import verify_report
 
 SYSTEM_PROMPT = (
     "You are an on-call incident investigation copilot. Use the search_logs and "
@@ -67,3 +68,16 @@ def build_summarize_node(structured_llm: Any) -> Any:
         return {"report": report}
 
     return summarize_node
+
+
+def build_verify_node(citation_coverage_floor: float) -> Any:
+    """Post-flight, pure-code guardrail: downgrades any report whose citations
+    don't resolve to actually-retrieved evidence, rather than publishing it."""
+
+    def verify_node(state: InvestigationState) -> dict[str, Any]:
+        report = state["report"]
+        messages = state.get("messages", [])
+        verified = verify_report(report, list(messages), citation_coverage_floor)
+        return {"report": verified}
+
+    return verify_node

@@ -1,16 +1,17 @@
 from __future__ import annotations
 
+import json
 import time
 from pathlib import Path
 from typing import Any
 
 import pytest
-from langchain_core.messages import AIMessage, HumanMessage
+from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 
 from oncall.graph.builder import build_investigation_graph
 from oncall.retrieval.log_store import LogStore
 from oncall.retrieval.vendor_kb import VendorKB
-from oncall.schemas.models import IncidentReport
+from oncall.schemas.models import Evidence, IncidentReport
 from oncall.settings import Settings
 
 
@@ -36,13 +37,36 @@ class _FakeToolCallingModel:
         return AIMessage(content="Evidence gathered; drafting report.")
 
 
+def _first_trace_id(messages: list[Any]) -> str | None:
+    """Pull a real trace_id out of the tool results so the fake structured
+    model can cite something that will actually pass the guardrail check."""
+    for message in messages:
+        if not isinstance(message, ToolMessage) or not isinstance(message.content, str):
+            continue
+        try:
+            payload = json.loads(message.content)
+        except (json.JSONDecodeError, TypeError):
+            continue
+        if isinstance(payload, list):
+            for item in payload:
+                if isinstance(item, dict) and item.get("trace_id"):
+                    return str(item["trace_id"])
+    return None
+
+
 class _FakeStructuredModel:
     async def ainvoke(self, messages: list[Any]) -> IncidentReport:
+        trace_id = _first_trace_id(messages)
+        evidence = (
+            [Evidence(source="log", reference=trace_id, detail="payment-service timeout")]
+            if trace_id
+            else []
+        )
         return IncidentReport(
             title="payment-service timeout cascade",
             severity="high",
             root_cause="payment-service upstream latency caused timeouts",
-            evidence=[],
+            evidence=evidence,
             recommended_actions=["add circuit breaker"],
             confidence=0.9,
         )
