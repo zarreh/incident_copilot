@@ -1,29 +1,23 @@
-"""Stub eval runner: no canonical cases yet, but the CLI shape is wired."""
+"""CLI entry point for `make eval` (Phase 7).
+
+Runs the Layer 1 canonical regression set and prints the pass/fail matrix.
+The run/print/gate shell is `zarreh_agentkit.evals.run_eval_cli`; the
+scenarios and oracle model stay local (evals/scenarios.py, evals/oracle.py).
+No live model or Docker sandbox is required -- see evals/oracle.py.
+"""
 
 from __future__ import annotations
 
-from collections.abc import Sequence
-from dataclasses import dataclass
+import sys
 
-from zarreh_agentkit.evals.runner import EvalOutcome, run_eval_cli
+from zarreh_agentkit.evals import run_eval_cli
 
-
-@dataclass(frozen=True)
-class Results:
-    outcomes: Sequence[EvalOutcome]
-
-
-def run_suite() -> Results:
-    return Results(outcomes=[])
-
-
-def print_report(results: Results) -> None:
-    print(f"Ran {len(results.outcomes)} canonical scenarios.")
+from evals.canonical import outcomes, print_report, run_canonical_eval
 
 
 def main() -> int:
-    return run_eval_cli(run_suite, print_report, lambda r: r.outcomes)
+    return run_eval_cli(run_canonical_eval, print_report, outcomes)
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    sys.exit(main())

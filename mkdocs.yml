@@ -66,3 +66,4 @@ nav:
       - D-A5-3 Sandboxing: adr/d-a5-3-sandboxing.md
       - D-A5-4 Evidence and honesty guardrail: adr/d-a5-4-evidence-and-honesty-guardrail.md
       - D-A5-5 Frontend investigation console: adr/d-a5-5-frontend-investigation-console.md
+      - D-A5-6 Eval oracle: adr/d-a5-6-eval-oracle.md
