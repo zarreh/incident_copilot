@@ -3,7 +3,9 @@
 An on-call assistant that retrieves logs, runs sandboxed diagnostics, and
 drafts incident reports.
 
-> Status: Phase 0 walking skeleton.
+> Status: all planned phases complete (data, sandboxed tools, investigation
+> graph, evidence/honesty guardrail, run store + streaming API, frontend,
+> canonical evals, CI/docs).
 
 ## Quick start
 
