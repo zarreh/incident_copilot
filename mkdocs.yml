@@ -64,3 +64,5 @@ nav:
       - D-A5-1 Domain and repo: adr/d-a5-1-domain-and-repo.md
       - D-A5-2 Web search default: adr/d-a5-2-web-search-default.md
       - D-A5-3 Sandboxing: adr/d-a5-3-sandboxing.md
+      - D-A5-4 Evidence and honesty guardrail: adr/d-a5-4-evidence-and-honesty-guardrail.md
+      - D-A5-5 Frontend investigation console: adr/d-a5-5-frontend-investigation-console.md
