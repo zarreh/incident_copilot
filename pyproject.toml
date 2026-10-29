@@ -108,4 +108,4 @@ source_modules = [
 forbidden_modules = ["oncall.graph"]
 
 [tool.uv.sources]
-zarreh-agentkit = { git = "https://github.com/zarreh/zarreh_agentkit.git", tag = "v0.2.0" }
+zarreh-agentkit = { git = "https://github.com/zarreh/zarreh_agentkit.git", tag = "v0.3.0" }
