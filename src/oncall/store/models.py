@@ -4,6 +4,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from zarreh_agentkit.cost import CostEntry
+from zarreh_agentkit.runs import RunEvent
+
 
 @dataclass(frozen=True)
 class RunRecord:
@@ -22,24 +25,4 @@ class RunRecord:
     error: str | None
 
 
-@dataclass(frozen=True)
-class RunEvent:
-    """One graph node boundary persisted during a run, so the SSE stream
-    replays whether a client watches live or reconnects after it finished."""
-
-    run_id: str
-    sequence: int
-    node: str
-    payload_json: str
-    created_at: str
-
-
-@dataclass(frozen=True)
-class CostEntry:
-    """One attributed LLM call within a run."""
-
-    node: str
-    model: str
-    prompt_tokens: int
-    completion_tokens: int
-    cost_usd: float
+__all__ = ["CostEntry", "RunEvent", "RunRecord"]
